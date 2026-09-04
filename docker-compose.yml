@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cloudops
+      POSTGRES_USER: cloudops
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cloudops -d cloudops"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes: [postgres_data:/var/lib/postgresql/data]
+  api:
+    build: { context: ., dockerfile: Dockerfile.api }
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=cloudops;Username=cloudops;Password=${POSTGRES_PASSWORD}
+      Jwt__Issuer: CloudOps.Api
+      Jwt__Audience: CloudOps.Web
+      Jwt__Secret: ${JWT_SECRET:?Set a JWT_SECRET of at least 32 bytes in .env}
+      FrontendUrl: http://localhost:5173
+    ports: ["8080:8080"]
+    depends_on: { postgres: { condition: service_healthy } }
+  web:
+    build: ./frontend
+    ports: ["5173:80"]
+    depends_on: [api]
+volumes:
+  postgres_data:
