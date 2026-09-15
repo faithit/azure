@@ -2,7 +2,11 @@ bin/
 obj/
 .vs/
 .env
+.env.*
+!.env.example
 frontend/node_modules/
 frontend/dist/
 frontend/.env
+frontend/.env.*
+!frontend/.env.example
 *.user

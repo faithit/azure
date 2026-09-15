@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("ConnectionStrings__DefaultConnection must be configured.");
+        var connectionString = DatabaseConnectionString.Resolve(configuration);
         var jwt = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>() ?? throw new InvalidOperationException("JWT settings must be configured.");
         if (string.IsNullOrWhiteSpace(jwt.Secret) || Encoding.UTF8.GetByteCount(jwt.Secret) < 32) throw new InvalidOperationException("Jwt__Secret must be configured and at least 32 bytes long.");
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));

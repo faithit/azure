@@ -1,10 +1,17 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /source
-COPY . .
-RUN dotnet restore src/CloudOps.Api/CloudOps.Api.csproj && dotnet publish src/CloudOps.Api/CloudOps.Api.csproj -c Release -o /app/publish --no-restore
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+COPY Directory.Build.props ./
+COPY src/CloudOps.Api/CloudOps.Api.csproj src/CloudOps.Api/
+COPY src/CloudOps.Application/CloudOps.Application.csproj src/CloudOps.Application/
+COPY src/CloudOps.Domain/CloudOps.Domain.csproj src/CloudOps.Domain/
+COPY src/CloudOps.Infrastructure/CloudOps.Infrastructure.csproj src/CloudOps.Infrastructure/
+RUN dotnet restore src/CloudOps.Api/CloudOps.Api.csproj
+COPY src ./src
+RUN dotnet publish src/CloudOps.Api/CloudOps.Api.csproj -c Release -o /app/publish --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
-EXPOSE 8080
-ENV ASPNETCORE_URLS=http://+:8080
-ENTRYPOINT ["dotnet", "CloudOps.Api.dll"]
+EXPOSE 10000
+ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+ENTRYPOINT ["sh", "-c", "exec dotnet CloudOps.Api.dll --urls http://+:${PORT:-10000}"]

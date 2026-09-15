@@ -9,7 +9,7 @@ public class CreateTaskRequest
 {
     [Required, StringLength(200, MinimumLength = 2)] public string Title { get; init; } = string.Empty;
     [StringLength(5000)] public string? Description { get; init; }
-    public TaskStatus Status { get; init; } = TaskStatus.Todo;
+    public TaskStatus Status { get; init; } = TaskStatus.ToDo;
     public TaskPriority Priority { get; init; } = TaskPriority.Medium;
     public DateTime? DueDateUtc { get; init; }
     public string? AssignedUserId { get; init; }

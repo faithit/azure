@@ -19,11 +19,21 @@ services:
       Jwt__Issuer: CloudOps.Api
       Jwt__Audience: CloudOps.Web
       Jwt__Secret: ${JWT_SECRET:?Set a JWT_SECRET of at least 32 bytes in .env}
-      FrontendUrl: http://localhost:5173
+      CLOUDOPS_DEFAULT_ADMIN_EMAIL: ${CLOUDOPS_DEFAULT_ADMIN_EMAIL:-admin@cloudops.local}
+      CLOUDOPS_DEFAULT_ADMIN_PASSWORD: ${CLOUDOPS_DEFAULT_ADMIN_PASSWORD:-AdminPass123!}
+      CORS_ALLOWED_ORIGINS: http://localhost:5173
+      Ai__ApiKey: ${AI_API_KEY:-}
+      Ai__Endpoint: ${AI_ENDPOINT:-}
+      Ai__Deployment: ${AI_DEPLOYMENT:-}
+      Ai__ApiVersion: ${AI_API_VERSION:-2024-10-21}
+      Ai__Model: ${AI_MODEL:-gpt-4o-mini}
     ports: ["8080:8080"]
     depends_on: { postgres: { condition: service_healthy } }
   web:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:8080/api
     ports: ["5173:80"]
     depends_on: [api]
 volumes:

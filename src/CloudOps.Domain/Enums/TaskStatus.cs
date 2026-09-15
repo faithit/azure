@@ -5,7 +5,6 @@ namespace CloudOps.Domain.Enums;
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum TaskStatus
 {
-    Todo = 0,
     ToDo = 0,
     InProgress = 1,
     Blocked = 2,

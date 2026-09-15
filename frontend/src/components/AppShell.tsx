@@ -15,6 +15,7 @@ export function AppShell() {
         <nav>
           <NavLink to="/">Dashboard</NavLink>
           <NavLink to="/projects">Projects</NavLink>
+          <NavLink to="/assistant">AI Assistant</NavLink>
           <NavLink to="/profile">Profile</NavLink>
         </nav>
 

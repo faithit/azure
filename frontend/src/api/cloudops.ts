@@ -1,9 +1,10 @@
 import { api } from './client'
-import type { AuthResponse, Dashboard, PagedResult, Project, ProjectMember, ProjectTask, ProjectPriority, ProjectStatus, TaskPriority, TaskStatus } from '../types'
+import type { AiChatResponse, AuthResponse, Dashboard, PagedResult, Project, ProjectMember, ProjectTask, ProjectPriority, ProjectStatus, TaskPriority, TaskStatus } from '../types'
 
 export const cloudops = {
   login: (email: string, password: string) => api<AuthResponse>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }),
   register: (displayName: string, email: string, password: string) => api<AuthResponse>('/auth/register', { method: 'POST', body: JSON.stringify({ displayName, email, password }) }),
+  askAi: (question: string, projectId?: string) => api<AiChatResponse>('/ai/chat', { method: 'POST', body: JSON.stringify({ question, ...(projectId ? { projectId } : {}) }) }),
   dashboard: () => api<Dashboard>('/dashboard'),
   projects: async () => {
     const page = await api<PagedResult<Project>>('/projects')

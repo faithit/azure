@@ -19,7 +19,7 @@ public sealed class ProjectTask : BaseEntity
 
     private ProjectTask() { }
 
-    public ProjectTask(Guid projectId, string title, string? description, TaskPriority priority, DateTime? dueDateUtc, string? assignedUserId, string? createdById = null, TaskStatus status = TaskStatus.Todo)
+    public ProjectTask(Guid projectId, string title, string? description, TaskPriority priority, DateTime? dueDateUtc, string? assignedUserId, string? createdById = null, TaskStatus status = TaskStatus.ToDo)
     {
         ProjectId = projectId;
         CreatedById = createdById ?? string.Empty;
@@ -47,4 +47,3 @@ public sealed class ProjectTask : BaseEntity
         UpdatedAtUtc = DateTime.UtcNow;
     }
 }
-
